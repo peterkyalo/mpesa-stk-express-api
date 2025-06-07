@@ -55,28 +55,29 @@ app.post("/initiate-stk-push", async (req, res) => {
 // callback endpoint
 app.post("/callback", async (req, res) => {
   try {
+    // Log the full request body for debugging
+    console.log("Received callback POST /callback");
+    console.log("Full request body:", JSON.stringify(req.body, null, 2));
     // Correctly extract the callback data
-    const stkCallBackdata = req.body.Body.stkCallback;
+    const stkCallBackdata = req.body.Body?.stkCallback;
     console.log("STK Callback Data:", stkCallBackdata);
     let status = null;
-    if (stkCallBackdata.ResultCode === 0) {
+    if (stkCallBackdata && stkCallBackdata.ResultCode === 0) {
       status = "Success";
     } else {
       status = "Failed";
     }
-    // Here you would typically handle the callback data, e.g., save it to a database
-
     // Database logic to save the callback data can be added here
-    await prisma.transaction.update({
-      where: {
-        // Assuming you have a way to identify the transaction, e.g., using a CheckoutRequestID
-        CheckoutRequestID: stkCallBackdata.CheckoutRequestID,
-      },
-      data: {
-        status: status, // Update the status based on the callback data
-      },
-    });
-
+    if (stkCallBackdata && stkCallBackdata.CheckoutRequestID) {
+      await prisma.transaction.update({
+        where: {
+          CheckoutRequestID: stkCallBackdata.CheckoutRequestID,
+        },
+        data: {
+          status: status, // Update the status based on the callback data
+        },
+      });
+    }
     res.json({
       status,
       stkCallBackdata,
