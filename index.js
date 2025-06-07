@@ -59,19 +59,19 @@ app.post("/callback", async (req, res) => {
     console.log("Received callback POST /callback");
     console.log("Full request body:", JSON.stringify(req.body, null, 2));
     // Correctly extract the callback data
-    const stkCallBackdata = req.body.Body?.stkCallback;
-    console.log("STK Callback Data:", stkCallBackdata);
+  const {stkCallback} = req.body.Body;
+    console.log("STK Callback Data:", stkCallback);
     let status = null;
-    if (stkCallBackdata && stkCallBackdata.ResultCode === 0) {
+    if (stkCallback.ResultCode === 0) {
       status = "Success";
     } else {
       status = "Failed";
     }
     // Database logic to save the callback data can be added here
-    if (stkCallBackdata && stkCallBackdata.CheckoutRequestID) {
+    if (stkCallback.CheckoutRequestID) {
       await prisma.transaction.update({
         where: {
-          CheckoutRequestID: stkCallBackdata.CheckoutRequestID,
+          CheckoutRequestID: stkCallback.CheckoutRequestID,
         },
         data: {
           status: status, // Update the status based on the callback data
@@ -80,7 +80,7 @@ app.post("/callback", async (req, res) => {
     }
     res.json({
       status,
-      stkCallBackdata,
+      stkCallback,
     });
   } catch (error) {
     res.status(500).json({
