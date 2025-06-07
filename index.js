@@ -39,6 +39,7 @@ app.post("/initiate-stk-push", async (req, res) => {
     // Here you would typically use the access token to make a request to the MPESA API
     res.status(200).json({
       success: true,
+      initiateStkResponse,
     });
 
     // Logic to initiate STK push
