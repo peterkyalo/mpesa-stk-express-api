@@ -54,7 +54,8 @@ app.post("/initiate-stk-push", async (req, res) => {
 // callback endpoint
 app.post("/callback", async (req, res) => {
   try {
-    const stkCallBackdata = req.body.Body;
+    // Correctly extract the callback data
+    const stkCallBackdata = req.body.Body.stkCallback;
     let status = null;
     if (stkCallBackdata.ResultCode === 0) {
       status = "Success";
