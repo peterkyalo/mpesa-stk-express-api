@@ -35,11 +35,10 @@ app.post("/initiate-stk-push", async (req, res) => {
       productName
     );
     // Store the transaction in the database
-    
+
     // Here you would typically use the access token to make a request to the MPESA API
     res.status(200).json({
       success: true,
-      initiateStkResponse,
     });
 
     // Logic to initiate STK push
@@ -71,8 +70,7 @@ app.post("/callback", async (req, res) => {
         CheckoutRequestID: stkCallBackdata.CheckoutRequestID,
       },
       data: {
-        status: status // Update the status based on the callback data
-        // You can also save other relevant information from stkCallBackdata
+        status: status, // Update the status based on the callback data
       },
     });
 
