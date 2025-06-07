@@ -1,3 +1,4 @@
+import prisma from "./utilities/db.js";
 // Function to generate timestamp
 const generateTimestamp = () => {
   const date = new Date();
