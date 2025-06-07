@@ -57,6 +57,7 @@ app.post("/callback", async (req, res) => {
   try {
     // Correctly extract the callback data
     const stkCallBackdata = req.body.Body.stkCallback;
+    console.log("STK Callback Data:", stkCallBackdata);
     let status = null;
     if (stkCallBackdata.ResultCode === 0) {
       status = "Success";
