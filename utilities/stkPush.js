@@ -57,6 +57,15 @@ export async function stkPush(accessToken, phoneNumber, amount, productName) {
     }
     // Parse the response as JSON
     const data = await response.json();
+
+    // Store the transaction in the database
+    await prisma.transaction.create({
+      data: {
+        CheckoutRequestID: data.CheckoutRequestID, // Assuming this is the ID returned by the API
+        amount,
+        status: "Pending", // Initial status // Assuming this is the transaction ID returned by the API
+      },
+    });
     // Return the data received from the API
     return data;
   } catch (error) {

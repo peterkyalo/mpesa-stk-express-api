@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import { getAccessToken } from "./utilities/auth.js"; // Adjust the path as necessary
 import { stkPush } from "./utilities/stkPush.js";
+import prisma from "./utilities/db.js";
 
 dotenv.config(); // Load environment variables
 
@@ -33,6 +34,8 @@ app.post("/initiate-stk-push", async (req, res) => {
       amount,
       productName
     );
+    // Store the transaction in the database
+    
     // Here you would typically use the access token to make a request to the MPESA API
     res.status(200).json({
       success: true,
@@ -62,6 +65,16 @@ app.post("/callback", async (req, res) => {
     // Here you would typically handle the callback data, e.g., save it to a database
 
     // Database logic to save the callback data can be added here
+    await prisma.transaction.update({
+      where: {
+        // Assuming you have a way to identify the transaction, e.g., using a CheckoutRequestID
+        CheckoutRequestID: stkCallBackdata.CheckoutRequestID,
+      },
+      data: {
+        status: status // Update the status based on the callback data
+        // You can also save other relevant information from stkCallBackdata
+      },
+    });
 
     res.json({
       status,
