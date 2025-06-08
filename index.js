@@ -12,6 +12,12 @@ const app = express();
 // Add middleware to parse JSON request bodies
 app.use(express.json());
 
+// Welcome route
+app.get("/", (req, res) => {
+  res.send("<h1>Welcome to Safaricom M-Pesa Express API</h1>");
+}); // This is a simple route that responds with a welcome message
+// This route is accessible at the root URL ("/") and returns a simple HTML message
+
 // initialte stk push
 app.post("/initiate-stk-push", async (req, res) => {
   try {
